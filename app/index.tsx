@@ -1,21 +1,30 @@
-import { Stack } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import { FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import TextTicker from 'react-native-text-ticker';
 
 // Mock Data with local image asset files configured
-const RECENT_ALBUMS = [
-  { id: '1', title: 'Daily Mix 1', image: require('../assets/images/say_it.jpg') }, 
-  { id: '2', title: 'Chill Vibes', color: '#BD00FF' }, 
-  { id: '3', title: 'Top Hits', color: '#00E5FF' },    
-  { id: '4', title: 'Discover', color: '#FF9900' },    
+const best_of = [
+  { id: '1', title: 'Say It', image: require('../assets/images/say_it.jpg') }, 
+  { id: '2', title: 'Just A Sunny Day For You', image: require('../assets/images/sunny_day.jpg') }, 
+  { id: '3', title: 'Rain With Capuccin', image: require('../assets/images/capuccino.jpg') },    
+  { id: '4', title: 'Thats Why I Gave Up On Music', image: require('../assets/images/gave_up.webp') },    
+];
+const albums = [
+  { id: '1', title: 'Summer Grass Gets in the Way', image: require('../assets/images/summer_grass.png') }, 
+  { id: '2', title: 'An Encore Doesnt Suit a Loser', image: require('../assets/images/suit_loser.png') }, 
+  { id: '3', title: 'Plagiarism', image: require('../assets/images/plagiarism.png') },    
+  { id: '4', title: 'Thats Why I Gave Up On Music', image: require('../assets/images/gave_up.webp') },    
 ];
 
+
 const HEAVY_ROTATION = [
-  { id: '5', title: 'Rock Classics', subtitle: 'The finest 70s', color: '#FF0055', image: require('../assets/images/say_it.jpg') }, 
-  { id: '6', title: 'Lofi Beats', subtitle: 'Study and relax', color: '#00FF66' },    
-  { id: '7', title: 'Deep Focus', subtitle: 'Ambient sounds', color: '#3300FF' },    
+  { id: '5', title: 'Ghost In A Flower', subtitle: 'Smell of Summer', image: require('../assets/images/ghost_flower.jpg') }, 
+  { id: '6', title: 'Lofi Beats', subtitle: 'Study and relax', image: require('../assets/images/ghost_flower.jpg') },    
+  { id: '7', title: 'Deep Focus', subtitle: 'Ambient sounds', image: require('../assets/images/ghost_flower.jpg') },    
 ];
 
 export default function SpotifyHome() {
+  const router = useRouter();
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       
@@ -29,12 +38,12 @@ export default function SpotifyHome() {
 
       {/* --- QUICK GRID (2 COLUMNS) --- */}
       <View style={styles.gridContainer}>
-        {RECENT_ALBUMS.map((item) => (
+        {best_of.map((item) => (
           <TouchableOpacity key={item.id} style={styles.gridCard} activeOpacity={0.8}>
             {item.image ? (
               <Image source={item.image} style={styles.gridImageBlock} />
             ) : (
-              <View style={[styles.gridImageBlock, { backgroundColor: item.color }]} />
+              <View style={[styles.gridImageBlock,]} />
             )}
             <Text numberOfLines={1} style={styles.gridText}>{item.title}</Text>
           </TouchableOpacity>
@@ -42,25 +51,52 @@ export default function SpotifyHome() {
       </View>
 
       {/* --- HORIZONTAL SHELF 1: MADE FOR YOU --- */}
-      <View style={styles.shelfContainer}>
-        <Text style={styles.shelfTitle}>Yorushika'ss Album</Text>
-        <FlatList
-          data={RECENT_ALBUMS}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <TouchableOpacity style={styles.albumCard} activeOpacity={0.7}>
-              {item.image ? (
-                <Image source={item.image} style={styles.albumImageBlock} />
-              ) : (
-                <View style={[styles.albumImageBlock, { backgroundColor: item.color }]} />
-              )}
-              <Text numberOfLines={1} style={styles.albumTitle}>{item.title}</Text>
-            </TouchableOpacity>
+<View style={styles.shelfContainer}>
+  <Text style={styles.shelfTitle}>Yorushika's Album</Text>
+  <FlatList
+    data={albums}
+    horizontal
+    showsHorizontalScrollIndicator={false}
+    keyExtractor={(item) => item.id}
+    renderItem={({ item }) => (
+      <TouchableOpacity style={styles.albumCard} activeOpacity={0.7}
+onPress={() => router.push({
+  pathname: '/album', // Keeps your path name exactly the same
+  params: { albumTitle: item.title } // Passes the specific album title parameter text forward
+})}
+
+      >
+        
+        {}
+        <View style={styles.imageWrapper}>
+          {item.image ? (
+            <Image source={item.image} style={styles.albumImageBlock} />
+          ) : (
+            <View style={[styles.albumImageBlock]} />
           )}
-        />
-      </View>
+          
+          {/* 2. ADD THIS FLOATING RECTANGLE RIGHT BENEATH THE IMAGE CONTENT */}
+          <View style={styles.albumTagContainer}>
+            <Text style={styles.albumTagText}>ALBUM</Text>
+          </View>
+        </View>
+
+  <TextTicker 
+    style={styles.albumTitle} 
+    duration={10000} 
+    loop 
+    bounce 
+    repeatSpacer={50} 
+    marqueeDelay={1000}
+>
+  {item.title}
+</TextTicker>
+
+      </TouchableOpacity>
+    )}
+  />
+</View>
+
 
       {/* --- HORIZONTAL SHELF 2: RECENTLY PLAYED --- */}
       <View style={styles.shelfContainer}>
@@ -75,7 +111,7 @@ export default function SpotifyHome() {
               {item.image ? (
                 <Image source={item.image} style={styles.largeAlbumImageBlock} />
               ) : (
-                <View style={[styles.largeAlbumImageBlock, { backgroundColor: item.color }]} />
+                <View style={[styles.largeAlbumImageBlock,]} />
               )}
               <Text numberOfLines={1} style={styles.albumTitle}>{item.title}</Text>
               <Text numberOfLines={1} style={styles.albumSubtitle}>{item.subtitle}</Text>
@@ -171,4 +207,26 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 2,
   },
+    // --- ADD THESE TWO STYLE RULE BLOCKS BELOW YOUR gridCard STYLE ---
+  imageWrapper: {
+    position: 'relative', 
+    overflow: 'hidden',
+  },
+  albumTagContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.65)', // Semi-transparent black shade
+    paddingVertical: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  albumTagText: {
+    color: '#FFFFFF',
+    fontSize: 9,
+    fontWeight: '900',
+    letterSpacing: 1,
+  },
+
 });
