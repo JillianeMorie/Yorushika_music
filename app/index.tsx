@@ -1,232 +1,406 @@
 import { Stack, useRouter } from 'expo-router';
-import { FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import TextTicker from 'react-native-text-ticker';
+import {
+  FlatList,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import AlbumCard from './components/AlbumCard';
 
-// Mock Data with local image asset files configured
 const best_of = [
-  { id: '1', title: 'Say It', image: require('../assets/images/say_it.jpg') }, 
-  { id: '2', title: 'Just A Sunny Day For You', image: require('../assets/images/sunny_day.jpg') }, 
-  { id: '3', title: 'Rain With Capuccin', image: require('../assets/images/capuccino.jpg') },    
-  { id: '4', title: 'Thats Why I Gave Up On Music', image: require('../assets/images/gave_up.webp') },    
+  {
+    id: '1',
+    title: 'Say It',
+    image: require('../assets/images/say_it.jpg'),
+  },
+  {
+    id: '2',
+    title: 'Just A Sunny Day For You',
+    image: require('../assets/images/sunny_day.jpg'),
+  },
+  {
+    id: '3',
+    title: 'Rain With Capuccin',
+    image: require('../assets/images/capuccino.jpg'),
+  },
+  {
+    id: '4',
+    title: 'Thats Why I Gave Up On Music',
+    image: require('../assets/images/gave_up.webp'),
+  },
 ];
+
 const albums = [
-  { id: '1', title: 'Summer Grass Gets in the Way', image: require('../assets/images/summer_grass.png') }, 
-  { id: '2', title: 'An Encore Doesnt Suit a Loser', image: require('../assets/images/suit_loser.png') }, 
-  { id: '3', title: 'Plagiarism', image: require('../assets/images/plagiarism.png') },    
-  { id: '4', title: 'Thats Why I Gave Up On Music', image: require('../assets/images/gave_up.webp') },    
+  {
+    id: '1',
+    title: 'Summer Grass Gets in the Way',
+    image: require('../assets/images/summer_grass.png'),
+  },
+  {
+    id: '2',
+    title: 'An Encore Doesnt Suit a Loser',
+    image: require('../assets/images/suit_loser.png'),
+  },
+  {
+    id: '3',
+    title: 'Plagiarism',
+    image: require('../assets/images/plagiarism.png'),
+  },
+  {
+    id: '4',
+    title: 'Thats Why I Gave Up On Music',
+    image: require('../assets/images/gave_up.webp'),
+  },
 ];
 
-
-const HEAVY_ROTATION = [
-  { id: '5', title: 'Ghost In A Flower', subtitle: 'Smell of Summer', image: require('../assets/images/ghost_flower.jpg') }, 
-  { id: '6', title: 'Lofi Beats', subtitle: 'Study and relax', image: require('../assets/images/ghost_flower.jpg') },    
-  { id: '7', title: 'Deep Focus', subtitle: 'Ambient sounds', image: require('../assets/images/ghost_flower.jpg') },    
+const YOU_MIGHT_LIKE = [
+  {
+    id: '5',
+    title: 'Ghost In A Flower',
+    subtitle: 'Smell of Summer',
+    image: require('../assets/images/ghost_flower.jpg'),
+  },
+  {
+    id: '6',
+    title: 'Hitchcock',
+    subtitle: 'Study and relax',
+    image: require('../assets/images/hitch.png'),
+  },
+  {
+    id: '7',
+    title: 'Nautilus',
+    subtitle: 'Ambient sounds',
+    image: require('../assets/images/nautilus.png'),
+  },
 ];
 
 export default function SpotifyHome() {
   const router = useRouter();
+
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      
-      {/* Hides the white "index" status bar header at the top */}
+    <View style={styles.screen}>
       <Stack.Screen options={{ headerShown: false }} />
-      
-      {/* --- HEADER --- */}
-      <View style={styles.header}>
-        <Text style={styles.greetingText}>Best of Yorushika</Text>
-      </View>
 
-      {/* --- QUICK GRID (2 COLUMNS) --- */}
-      <View style={styles.gridContainer}>
-        {best_of.map((item) => (
-          <TouchableOpacity key={item.id} style={styles.gridCard} activeOpacity={0.8}>
-            {item.image ? (
-              <Image source={item.image} style={styles.gridImageBlock} />
-            ) : (
-              <View style={[styles.gridImageBlock,]} />
-            )}
-            <Text numberOfLines={1} style={styles.gridText}>{item.title}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-
-      {/* --- HORIZONTAL SHELF 1: MADE FOR YOU --- */}
-<View style={styles.shelfContainer}>
-  <Text style={styles.shelfTitle}>Yorushika's Album</Text>
-  <FlatList
-    data={albums}
-    horizontal
-    showsHorizontalScrollIndicator={false}
-    keyExtractor={(item) => item.id}
-    renderItem={({ item }) => (
-      <TouchableOpacity style={styles.albumCard} activeOpacity={0.7}
-onPress={() => router.push({
-  pathname: '/album', // Keeps your path name exactly the same
-  params: { albumTitle: item.title } // Passes the specific album title parameter text forward
-})}
-
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false}
       >
-        
-        {}
-        <View style={styles.imageWrapper}>
-          {item.image ? (
-            <Image source={item.image} style={styles.albumImageBlock} />
-          ) : (
-            <View style={[styles.albumImageBlock]} />
-          )}
-          
-          {/* 2. ADD THIS FLOATING RECTANGLE RIGHT BENEATH THE IMAGE CONTENT */}
-          <View style={styles.albumTagContainer}>
-            <Text style={styles.albumTagText}>ALBUM</Text>
+
+        <View style={styles.header}>
+          <View>
+            <Text style={styles.smallGreeting}>LISTEN TO</Text>
+            <Text style={styles.greetingText}>Yorushika</Text>
+          </View>
+
+          <View style={styles.headerDot}>
+            <Text style={styles.headerDotText}>♪</Text>
           </View>
         </View>
 
-  <TextTicker 
-    style={styles.albumTitle} 
-    duration={10000} 
-    loop 
-    bounce 
-    repeatSpacer={50} 
-    marqueeDelay={1000}
->
-  {item.title}
-</TextTicker>
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>Best of Yorushika</Text>
+          <Text style={styles.sectionSubtitle}>Popular tracks</Text>
+        </View>
 
-      </TouchableOpacity>
-    )}
-  />
-</View>
+        <View style={styles.gridContainer}>
+          {best_of.map((item) => (
+            <TouchableOpacity
+              key={item.id}
+              style={styles.gridCard}
+              activeOpacity={0.8}
+              onPress={() =>
+                router.push({
+                  pathname: '/player',
+                  params: {
+                    trackTitle: item.title,
+                    trackImage: item.image,
+                  },
+                })
+              }
+            >
+              <Image
+                source={item.image}
+                style={styles.gridImageBlock}
+              />
 
+              <View style={styles.gridTextContainer}>
+                <Text
+                  numberOfLines={2}
+                  style={styles.gridText}
+                >
+                  {item.title}
+                </Text>
 
-      {/* --- HORIZONTAL SHELF 2: RECENTLY PLAYED --- */}
-      <View style={styles.shelfContainer}>
-        <Text style={styles.shelfTitle}>You Might Like</Text>
-        <FlatList
-          data={HEAVY_ROTATION}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <TouchableOpacity style={styles.largeAlbumCard} activeOpacity={0.7}>
-              {item.image ? (
-                <Image source={item.image} style={styles.largeAlbumImageBlock} />
-              ) : (
-                <View style={[styles.largeAlbumImageBlock,]} />
-              )}
-              <Text numberOfLines={1} style={styles.albumTitle}>{item.title}</Text>
-              <Text numberOfLines={1} style={styles.albumSubtitle}>{item.subtitle}</Text>
+                <Text style={styles.gridArtist}>
+                  Yorushika
+                </Text>
+              </View>
             </TouchableOpacity>
-          )}
-        />
-      </View>
+          ))}
+        </View>
 
-      <View style={{ height: 60 }} />
-    </ScrollView>
+        <View style={styles.shelfContainer}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Yorushika's Albums</Text>
+            <Text style={styles.sectionSubtitle}>Explore the collection</Text>
+          </View>
+
+          <FlatList
+            data={albums}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={styles.horizontalList}
+            renderItem={({ item }) => (
+              <AlbumCard
+                title={item.title}
+                image={item.image}
+                onPress={() =>
+                  router.push({
+                    pathname: '/album',
+                    params: {
+                      albumTitle: item.title,
+                      albumImage: item.image,
+                    },
+                  })
+                }
+              />
+            )}
+          />
+        </View>
+
+        <View style={styles.shelfContainer}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>You Might Like</Text>
+            <Text style={styles.sectionSubtitle}>More songs for you</Text>
+          </View>
+
+          <FlatList
+            data={YOU_MIGHT_LIKE}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={styles.horizontalList}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={styles.largeAlbumCard}
+                activeOpacity={0.8}
+                onPress={() =>
+                  router.push({
+                    pathname: '/player',
+                    params: {
+                      trackTitle: item.title,
+                      trackImage: item.image,
+                    },
+                  })
+                }
+              >
+                <View style={styles.largeImageWrapper}>
+                  <Image
+                    source={item.image}
+                    style={styles.largeAlbumImageBlock}
+                  />
+
+                  <View style={styles.playOverlay}>
+                    <Text style={styles.playIcon}>▶</Text>
+                  </View>
+                </View>
+
+                <Text
+                  numberOfLines={1}
+                  style={styles.albumTitle}
+                >
+                  {item.title}
+                </Text>
+
+                <Text
+                  numberOfLines={1}
+                  style={styles.albumSubtitle}
+                >
+                  {item.subtitle}
+                </Text>
+              </TouchableOpacity>
+            )}
+          />
+        </View>
+
+        <View style={{ height: 70 }} />
+
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    backgroundColor: '#121212',
+  },
+
   container: {
     flex: 1,
-    backgroundColor: '#121212', 
+  },
+
+  contentContainer: {
     paddingHorizontal: 16,
+    paddingTop: 58,
   },
+
+
   header: {
-    marginTop: 60, 
-    marginBottom: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 30,
   },
+
+  smallGreeting: {
+    color: '#A7A7A7',
+    fontSize: 11,
+    fontWeight: '700',
+    letterSpacing: 2,
+    marginBottom: 4,
+  },
+
   greetingText: {
-    fontSize: 24,
-    fontWeight: 'bold',
     color: '#FFFFFF',
+    fontSize: 30,
+    fontWeight: '800',
+    letterSpacing: -0.5,
   },
+
+  headerDot: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: '#282828',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  headerDotText: {
+    color: '#FFFFFF',
+    fontSize: 21,
+  },
+
+
+  sectionHeader: {
+    marginBottom: 14,
+  },
+
+  sectionTitle: {
+    color: '#FFFFFF',
+    fontSize: 21,
+    fontWeight: '800',
+    letterSpacing: -0.3,
+  },
+
+  sectionSubtitle: {
+    color: '#8E8E8E',
+    fontSize: 12,
+    marginTop: 4,
+  },
+
+
   gridContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    marginBottom: 30,
-  },
-  gridCard: {
-    backgroundColor: '#282828',
-    width: '48%',
-    height: 56,
-    borderRadius: 4,
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
-    overflow: 'hidden',
-  },
-  gridImageBlock: {
-    width: 56,
-    height: 56,
-  },
-  gridText: {
-    color: '#FFFFFF',
-    fontSize: 13,
-    fontWeight: 'bold',
-    marginLeft: 8,
-    flex: 1,
-    paddingRight: 4,
-  },
-  shelfContainer: {
-    marginBottom: 28,
-  },
-  shelfTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    marginBottom: 14,
-  },
-  albumCard: {
-    marginRight: 16,
-    width: 120,
-  },
-  albumImageBlock: {
-    width: 120,
-    height: 120,
-    borderRadius: 4,
-    marginBottom: 8,
-  },
-  albumTitle: {
-    color: '#FFFFFF',
-    fontSize: 13,
-    fontWeight: '600',
-  },
-  largeAlbumCard: {
-    marginRight: 16,
-    width: 150,
-  },
-  largeAlbumImageBlock: {
-    width: 150,
-    height: 150,
-    borderRadius: 4,
-    marginBottom: 8,
-  },
-  albumSubtitle: {
-    color: '#B3B3B3',
-    fontSize: 12,
-    marginTop: 2,
-  },
-    // --- ADD THESE TWO STYLE RULE BLOCKS BELOW YOUR gridCard STYLE ---
-  imageWrapper: {
-    position: 'relative', 
-    overflow: 'hidden',
-  },
-  albumTagContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.65)', // Semi-transparent black shade
-    paddingVertical: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  albumTagText: {
-    color: '#FFFFFF',
-    fontSize: 9,
-    fontWeight: '900',
-    letterSpacing: 1,
+    marginBottom: 34,
   },
 
+  gridCard: {
+    width: '48.5%',
+    height: 70,
+    backgroundColor: '#202020',
+    borderRadius: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+    overflow: 'hidden',
+    marginBottom: 10,
+  },
+
+  gridImageBlock: {
+    width: 70,
+    height: 70,
+  },
+
+  gridTextContainer: {
+    flex: 1,
+    paddingHorizontal: 9,
+    justifyContent: 'center',
+  },
+
+  gridText: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontWeight: '700',
+    lineHeight: 16,
+  },
+
+  gridArtist: {
+    color: '#858585',
+    fontSize: 10,
+    marginTop: 3,
+  },
+
+
+  shelfContainer: {
+    marginBottom: 32,
+  },
+
+  horizontalList: {
+    paddingRight: 8,
+  },
+
+
+  largeAlbumCard: {
+    width: 155,
+    marginRight: 17,
+  },
+
+  largeImageWrapper: {
+    position: 'relative',
+    marginBottom: 9,
+  },
+
+  largeAlbumImageBlock: {
+    width: 155,
+    height: 155,
+    borderRadius: 8,
+  },
+
+  playOverlay: {
+    position: 'absolute',
+    right: 8,
+    bottom: 8,
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  playIcon: {
+    color: '#121212',
+    fontSize: 13,
+    marginLeft: 2,
+  },
+
+  albumTitle: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '700',
+  },
+
+  albumSubtitle: {
+    color: '#858585',
+    fontSize: 11,
+    marginTop: 4,
+  },
 });
