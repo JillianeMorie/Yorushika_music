@@ -29,5 +29,5 @@ A modern, dark-themed music streaming layout application built with React Native
 4. Scan the QR code via Iphone15 using the **Expo Go** application.
 
 ---
-**Student Name:** [Weah_Joy_T._Jacinto]
+**Student Name:** [Weah Joy T. Jacinto]
 **Class Section:** [CS42A]
