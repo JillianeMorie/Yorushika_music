@@ -16,17 +16,19 @@ A modern, dark-themed music streaming layout application built with React Native
 
 ## 🚀 How to Run the Project
 1. Open your terminal using VS Code in the root project directory. 
-   ```C:\Yorushika
-2. Install the necessary packages:
+   ```bash
+   C:\Yorushika_music
+   ```
+3. Install the necessary packages:
    ```bash
    npm install
    npm install react-native-text-ticker
    ```
-3. Boot up the local compilation server:
+4. Boot up the local compilation server:
    ```bash
    npx expo start
    ```
-4. Scan the QR code via Iphone15 using the **Expo Go** application.
+5. Scan the QR code via Iphone15 using the **Expo Go** application.
 
 ---
 **Student Name:** [Weah Joy T. Jacinto]
